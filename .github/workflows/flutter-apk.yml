@@ -1,0 +1,76 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Flutter APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Check Flutter
+        run: |
+          flutter --version
+          dart --version
+
+      - name: Create private_keys.dart
+        run: |
+          mkdir -p lib/core/utility
+          cat > lib/core/utility/private_keys.dart <<'EOF'
+          const String notificationKey = 'key=unused-fcm-server-key';
+          const String agoraAppId = '';
+          EOF
+
+      - name: Write google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$GOOGLE_SERVICES_JSON" ]; then
+            echo "GitHub secret GOOGLE_SERVICES_JSON missing."
+            echo "Firebase Console -> Project settings -> Your apps -> google-services.json"
+            echo "Repo Settings -> Secrets and variables -> Actions -> New secret"
+            exit 1
+          fi
+          mkdir -p android/app
+          printf '%s\n' "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
+
+      - name: Accept Android licenses
+        run: yes | flutter doctor --android-licenses || true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: build/app/outputs/flutter-apk/*.apk
+          
