@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1029822951371",
+    "project_id": "loopa-a7d88",
+    "storage_bucket": "loopa-a7d88.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029822951371:android:ffdab17621ab64fe02d04e",
+        "android_client_info": {
+          "package_name": "com.example.instagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1029822951371-o8tpkkgagck50b9volgf4ddekq4l171e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAORdQ2miY7Wn5J_7m1KrA9c3mPvpqqZLQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1029822951371-o8tpkkgagck50b9volgf4ddekq4l171e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
